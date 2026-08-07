@@ -1,0 +1,28 @@
+{
+  "name": "vredehof-6-ledger",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:check": "node scripts/check-setup.mjs",
+    "db:hash-password": "node scripts/hash-password.mjs",
+    "db:import-workbook": "node scripts/import-workbook.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.0",
+    "pg": "8.16.3",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "xlsx": "0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "24.3.0",
+    "@types/pg": "8.15.5",
+    "@types/react": "19.1.11",
+    "@types/react-dom": "19.1.7",
+    "typescript": "5.9.2"
+  }
+}
