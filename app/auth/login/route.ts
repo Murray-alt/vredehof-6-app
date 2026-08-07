@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authenticate, createSession } from "@/lib/auth";
+import { authenticate, buildSessionCookieValue, COOKIE_NAME, getSessionCookieOptions } from "@/lib/auth";
 
 export async function POST(request: Request): Promise<Response> {
   const formData = await request.formData();
@@ -12,6 +12,7 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.redirect(new URL("/login?error=invalid", request.url), 303);
   }
 
-  await createSession(Number(user.id));
-  return NextResponse.redirect(new URL("/", request.url), 303);
+  const response = NextResponse.redirect(new URL("/", request.url), 303);
+  response.cookies.set(COOKIE_NAME, buildSessionCookieValue(user.id), getSessionCookieOptions());
+  return response;
 }

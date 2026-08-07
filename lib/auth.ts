@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { sql } from "@/lib/db";
 
 type UserRow = {
@@ -14,7 +15,7 @@ type UserRow = {
 
 export type SessionUser = Omit<UserRow, "password_hash">;
 
-const COOKIE_NAME = "vredehof_session";
+export const COOKIE_NAME = "vredehof_session";
 
 function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
@@ -28,6 +29,21 @@ function getSessionSecret(): string {
 
 function sign(value: string): string {
   return crypto.createHmac("sha256", getSessionSecret()).update(value).digest("hex");
+}
+
+export function buildSessionCookieValue(userId: number | string): string {
+  const rawUserId = String(userId);
+  return `${rawUserId}:${sign(rawUserId)}`;
+}
+
+export function getSessionCookieOptions(): Partial<ResponseCookie> {
+  return {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 12
+  };
 }
 
 function verifyPassword(plainText: string, storedHash: string): boolean {
@@ -66,16 +82,10 @@ export async function authenticate(email: string, password: string): Promise<Ses
 }
 
 export async function createSession(userId: number): Promise<void> {
-  const value = `${userId}:${sign(String(userId))}`;
+  const value = buildSessionCookieValue(userId);
   const store = await cookies();
 
-  store.set(COOKIE_NAME, value, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 12
-  });
+  store.set(COOKIE_NAME, value, getSessionCookieOptions());
 }
 
 export async function destroySession(): Promise<void> {

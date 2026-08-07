@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
-import { destroySession } from "@/lib/auth";
+import { COOKIE_NAME, getSessionCookieOptions } from "@/lib/auth";
 
 export async function POST(request: Request): Promise<Response> {
-  await destroySession();
-  return NextResponse.redirect(new URL("/login", request.url), 303);
+  const response = NextResponse.redirect(new URL("/login", request.url), 303);
+  response.cookies.set(COOKIE_NAME, "", {
+    ...getSessionCookieOptions(),
+    maxAge: 0
+  });
+  return response;
 }
