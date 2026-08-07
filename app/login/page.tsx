@@ -1,5 +1,3 @@
-import { loginAction } from "@/app/actions";
-
 export default async function LoginPage({
   searchParams
 }: {
@@ -22,7 +20,7 @@ export default async function LoginPage({
           <div className="banner error">Email or password is incorrect.</div>
         ) : null}
 
-        <form action={loginAction} className="grid">
+        <form action="/auth/login" method="post" className="grid">
           <label>
             Email
             <input type="email" name="email" autoComplete="username" required />

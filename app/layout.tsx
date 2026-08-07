@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
-import { logoutAction } from "@/app/actions";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -39,7 +38,7 @@ export default async function RootLayout({
                     <Link href="/categories" className="nav-link ghost">Categories</Link>
                   </>
                 ) : null}
-                <form action={logoutAction}>
+                <form action="/auth/logout" method="post">
                   <button type="submit" className="secondary">Sign out</button>
                 </form>
               </div>
