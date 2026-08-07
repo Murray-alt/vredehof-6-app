@@ -101,8 +101,15 @@ async function insertEntry(propertyId, categoryId, entryDate, entryType, descrip
       source,
       source_reference,
       is_visible_to_stakeholders
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, 'imported', $8, TRUE)
-    ON CONFLICT (property_id, source, source_reference) DO NOTHING
+    )
+    SELECT $1, $2, $3, $4, $5, $6, $7, 'imported', $8, TRUE
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM ledger_entries
+      WHERE property_id = $1
+        AND source = 'imported'
+        AND source_reference = $8
+    )
     RETURNING id`,
     [propertyId, categoryId, entryDate, entryType, description, amount, balanceEffect, sourceReference]
   );
