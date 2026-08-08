@@ -423,6 +423,16 @@ textarea {
   outline: none;
 }
 
+select {
+  color-scheme: dark;
+}
+
+select option,
+select optgroup {
+  color: #0c1526;
+  background: #f4f7fc;
+}
+
 input:focus,
 select:focus,
 textarea:focus {
