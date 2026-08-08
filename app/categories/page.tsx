@@ -62,42 +62,40 @@ export default async function CategoriesPage({
 
       {banner ? <div className={`banner ${banner.kind}`}>{banner.message}</div> : null}
 
-      <section className="grid cards">
-        <article className="panel">
-          <p className="eyebrow">Create</p>
-          <h2 className="section-title">Create category</h2>
-          <form action={createCategoryAction} className="grid">
-            <div className="form-grid">
-              <label>
-                Name
-                <input type="text" name="name" required placeholder="Insurance" />
-              </label>
-              <label>
-                Type
-                <select name="category_type" defaultValue="expense">
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                  <option value="adjustment">Adjustment</option>
-                  <option value="opening_balance">Opening balance</option>
-                </select>
-              </label>
-            </div>
+      <section className="panel">
+        <p className="eyebrow">Create</p>
+        <h2 className="section-title">Create category</h2>
+        <form action={createCategoryAction} className="grid">
+          <div className="form-grid">
+            <label>
+              Name
+              <input type="text" name="name" required placeholder="Insurance" />
+            </label>
+            <label>
+              Type
+              <select name="category_type" defaultValue="expense">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+                <option value="adjustment">Adjustment</option>
+                <option value="opening_balance">Opening balance</option>
+              </select>
+            </label>
+          </div>
 
-            <div>
-              <button type="submit">Create category</button>
-            </div>
-          </form>
-        </article>
+          <div>
+            <button type="submit">Create category</button>
+          </div>
+        </form>
+      </section>
 
-        <article className="panel">
-          <p className="eyebrow">Guidance</p>
-          <h2 className="section-title">Category notes</h2>
-          <ul className="muted" style={{ margin: 0, paddingLeft: 20 }}>
-            <li>Inactive categories no longer appear in the new-entry dropdown.</li>
-            <li>Existing ledger rows keep their original category when a category is disabled.</li>
-            <li>Use sort order to control the order Murray sees in forms and reports.</li>
-          </ul>
-        </article>
+      <section className="panel">
+        <p className="eyebrow">Guidance</p>
+        <h2 className="section-title">Category notes</h2>
+        <ul className="muted" style={{ margin: 0, paddingLeft: 20 }}>
+          <li>Inactive categories no longer appear in the new-entry dropdown.</li>
+          <li>Existing ledger rows keep their original category when a category is disabled.</li>
+          <li>Use sort order to control the order Murray sees in forms and reports.</li>
+        </ul>
       </section>
 
       <section className="panel">

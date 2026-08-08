@@ -38,53 +38,51 @@ export default async function ImportsPage({
         </p>
       </section>
 
-      <section className="grid cards">
-        <article className="panel">
-          <p className="eyebrow">Overview</p>
-          <h2 className="section-title">Imported overview</h2>
-          <div className="grid cards">
-            <div className="metric">
-              <strong>{importedSummary?.entry_count ?? 0}</strong>
-              <span>Imported rows</span>
-            </div>
-            <div className="metric">
-              <strong>{formatCurrency(importedSummary?.total_amount ?? 0)}</strong>
-              <span>Imported amount total</span>
-            </div>
-            <div className="metric">
-              <strong>{formatDateDisplay(importedSummary?.latest_entry_date)}</strong>
-              <span>Latest imported date</span>
-            </div>
+      <section className="panel">
+        <p className="eyebrow">Overview</p>
+        <h2 className="section-title">Imported overview</h2>
+        <div className="stat-strip compact">
+          <div className="metric">
+            <span className="metric-label">Imported rows</span>
+            <strong>{importedSummary?.entry_count ?? 0}</strong>
           </div>
-        </article>
+          <div className="metric">
+            <span className="metric-label">Imported amount total</span>
+            <strong>{formatCurrency(importedSummary?.total_amount ?? 0)}</strong>
+          </div>
+          <div className="metric">
+            <span className="metric-label">Latest imported date</span>
+            <strong>{formatDateDisplay(importedSummary?.latest_entry_date)}</strong>
+          </div>
+        </div>
+      </section>
 
-        <article className="panel">
-          <p className="eyebrow">Review tools</p>
-          <h2 className="section-title">Filter imported rows</h2>
-          <form method="get" className="form-grid">
-            <label>
-              Month
-              <input type="month" name="month" defaultValue={filters.month ?? ""} />
-            </label>
-            <label>
-              Entry type
-              <select name="entry_type" defaultValue={filters.entryType ?? ""}>
-                <option value="">All types</option>
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
-                <option value="adjustment">Adjustment</option>
-                <option value="opening_balance">Opening balance</option>
-              </select>
-            </label>
-            <label>
-              Search
-              <input type="search" name="search" defaultValue={filters.search ?? ""} placeholder="Description or Sheet reference" />
-            </label>
-            <div style={{ alignSelf: "end" }}>
-              <button type="submit">Apply filters</button>
-            </div>
-          </form>
-        </article>
+      <section className="panel">
+        <p className="eyebrow">Review tools</p>
+        <h2 className="section-title">Filter imported rows</h2>
+        <form method="get" className="form-grid">
+          <label>
+            Month
+            <input type="month" name="month" defaultValue={filters.month ?? ""} />
+          </label>
+          <label>
+            Entry type
+            <select name="entry_type" defaultValue={filters.entryType ?? ""}>
+              <option value="">All types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+              <option value="adjustment">Adjustment</option>
+              <option value="opening_balance">Opening balance</option>
+            </select>
+          </label>
+          <label>
+            Search
+            <input type="search" name="search" defaultValue={filters.search ?? ""} placeholder="Description or Sheet reference" />
+          </label>
+          <div style={{ alignSelf: "end" }}>
+            <button type="submit">Apply filters</button>
+          </div>
+        </form>
       </section>
 
       <section className="panel">

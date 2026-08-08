@@ -144,9 +144,18 @@ export default async function LedgerPage({
       </section>
 
       {canEdit ? (
-        <section className="grid cards">
-          <article className="panel">
-            <h2 style={{ marginTop: 0 }}>{entryFormTitle}</h2>
+        <>
+          <section className="panel">
+            <div className="topbar">
+              <div>
+                <p className="eyebrow">Owner tools</p>
+                <h2 className="section-title">{entryFormTitle}</h2>
+                <p className="muted" style={{ margin: 0 }}>
+                  Capture rent, shared costs, owner withdrawals, tenant deposits, and adjustments in one place.
+                </p>
+              </div>
+            </div>
+
             <form action={entryFormAction} className="grid">
               {editingEntry ? <input type="hidden" name="entry_id" value={editingEntry.id} /> : null}
               <div className="form-grid">
@@ -243,30 +252,33 @@ export default async function LedgerPage({
                 ) : null}
               </div>
             </form>
-          </article>
+          </section>
 
-          <article className="panel">
-            <h2 style={{ marginTop: 0 }}>Add category</h2>
+          <section className="panel">
+            <p className="eyebrow">Quick setup</p>
+            <h2 className="section-title">Add category</h2>
             <form action={createCategoryAction} className="grid">
-              <label>
-                Category name
-                <input type="text" name="name" required placeholder="Utilities" />
-              </label>
-              <label>
-                Category type
-                <select name="category_type" defaultValue="expense">
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                  <option value="adjustment">Adjustment</option>
-                  <option value="opening_balance">Opening balance</option>
-                </select>
-              </label>
+              <div className="form-grid">
+                <label>
+                  Category name
+                  <input type="text" name="name" required placeholder="Utilities" />
+                </label>
+                <label>
+                  Category type
+                  <select name="category_type" defaultValue="expense">
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                    <option value="adjustment">Adjustment</option>
+                    <option value="opening_balance">Opening balance</option>
+                  </select>
+                </label>
+              </div>
               <div>
                 <button type="submit" className="secondary">Create category</button>
               </div>
             </form>
-          </article>
-        </section>
+          </section>
+        </>
       ) : null}
 
       <section className="panel">
