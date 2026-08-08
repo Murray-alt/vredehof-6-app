@@ -58,11 +58,11 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
   const currentSection = navItems.find((item) => item.href === pathname)?.label ?? "Overview";
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className={cx("min-h-screen bg-zinc-950 text-zinc-100", mobileOpen && "h-screen overflow-hidden")}>
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(148,163,184,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(113,113,122,0.12),transparent_22%),linear-gradient(180deg,#09090b_0%,#111827_45%,#09090b_100%)]" />
 
       <div className="mx-auto flex min-h-screen w-full max-w-7xl gap-0 px-0 lg:px-6">
-        <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r border-white/10 bg-zinc-950/85 px-5 py-6 backdrop-blur xl:block">
+        <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r border-white/10 bg-zinc-950/85 px-5 py-6 backdrop-blur lg:block">
           <SidebarContent currentPath={pathname} navItems={navItems} user={user} />
         </aside>
 
@@ -72,14 +72,14 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
               <button
                 type="button"
                 onClick={() => setMobileOpen(true)}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-100 transition hover:border-white/20 hover:bg-white/10 xl:hidden"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-100 transition hover:border-white/20 hover:bg-white/10 lg:hidden"
                 aria-label="Open navigation"
               >
                 <Menu className="h-5 w-5" />
               </button>
 
               <div className="min-w-0 flex-1">
-                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-400">Vredehof 6</p>
                     <div className="mt-1 flex items-center gap-3">
@@ -90,7 +90,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
                     </div>
                   </div>
 
-                  <form action="/ledger" method="get" className="w-full max-w-xl">
+                  <form action="/ledger" method="get" className="w-full max-w-xl md:flex-1 md:max-w-md lg:max-w-xl">
                     <label className="sr-only" htmlFor="global-search">
                       Search ledger
                     </label>
@@ -115,7 +115,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
       </div>
 
       {mobileOpen ? (
-        <div className="xl:hidden">
+        <div className="lg:hidden">
           <button
             type="button"
             aria-label="Close navigation overlay"
@@ -123,8 +123,8 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
             onClick={() => setMobileOpen(false)}
           />
 
-          <aside className="fixed inset-y-0 left-0 z-50 flex w-[86vw] max-w-xs flex-col border-r border-white/10 bg-zinc-950 px-5 py-6 shadow-2xl">
-            <div className="mb-4 flex items-center justify-between">
+          <aside className="fixed inset-0 z-50 flex flex-col bg-zinc-950 px-5 pb-6 pt-5 shadow-2xl">
+            <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-200/20 to-zinc-400/10 ring-1 ring-white/10">
                   <Building2 className="h-5 w-5 text-white" />
@@ -144,7 +144,9 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
               </button>
             </div>
 
-            <SidebarContent currentPath={pathname} navItems={navItems} user={user} onNavigate={() => setMobileOpen(false)} />
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <SidebarContent currentPath={pathname} navItems={navItems} user={user} onNavigate={() => setMobileOpen(false)} />
+            </div>
           </aside>
         </div>
       ) : null}
