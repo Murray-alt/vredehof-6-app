@@ -122,15 +122,15 @@ export default async function ImportsPage({
               ) : (
                 importedEntries.map((entry) => (
                   <tr key={entry.id}>
-                    <td>{formatDateDisplay(entry.entry_date)}</td>
-                    <td>{entry.entry_type.replace("_", " ")}</td>
-                    <td>{entry.description}</td>
-                    <td>{entry.category_name ?? "Uncategorised"}</td>
-                    <td>{formatCurrency(entry.amount)}</td>
-                    <td>{formatCurrency(entry.balance_effect)}</td>
-                    <td>{formatCurrency(entry.running_balance)}</td>
-                    <td><code>{entry.source_reference ?? "No reference"}</code></td>
-                    <td>
+                    <td data-label="Date">{formatDateDisplay(entry.entry_date)}</td>
+                    <td data-label="Type">{entry.entry_type.replace("_", " ")}</td>
+                    <td data-label="Description">{entry.description}</td>
+                    <td data-label="Category">{entry.category_name ?? "Uncategorised"}</td>
+                    <td data-label="Amount">{formatCurrency(entry.amount)}</td>
+                    <td data-label="Balance effect">{formatCurrency(entry.balance_effect)}</td>
+                    <td data-label="Running balance">{formatCurrency(entry.running_balance)}</td>
+                    <td data-label="Workbook source"><code>{entry.source_reference ?? "No reference"}</code></td>
+                    <td data-label="Visibility">
                       <span className={`pill ${entry.is_visible_to_stakeholders ? "" : "hidden"}`}>
                         {entry.is_visible_to_stakeholders ? "Visible" : "Owner only"}
                       </span>

@@ -157,10 +157,10 @@ export default async function DashboardPage() {
                 <tbody>
                   {ownerSettlements.map((owner) => (
                     <tr key={owner.owner_id}>
-                      <td>{owner.owner_name}</td>
-                      <td>{formatCurrency(owner.gross_share)}</td>
-                      <td>{formatCurrency(owner.owner_draw_total)}</td>
-                      <td>{formatCurrency(owner.settlement_due)}</td>
+                      <td data-label="Owner">{owner.owner_name}</td>
+                      <td data-label="Gross 50% share">{formatCurrency(owner.gross_share)}</td>
+                      <td data-label="Personal withdrawals/expenses">{formatCurrency(owner.owner_draw_total)}</td>
+                      <td data-label="Settlement due">{formatCurrency(owner.settlement_due)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -242,8 +242,8 @@ export default async function DashboardPage() {
               ) : (
                 expenseBreakdown.map((row) => (
                   <tr key={row.category_name}>
-                    <td>{row.category_name}</td>
-                    <td>{formatCurrency(row.total)}</td>
+                    <td data-label="Category">{row.category_name}</td>
+                    <td data-label="Total expenses">{formatCurrency(row.total)}</td>
                   </tr>
                 ))
               )}

@@ -305,25 +305,25 @@ export default async function LedgerPage({
               ) : (
                 entries.map((entry) => (
                   <tr key={entry.id}>
-                    <td>{formatDateDisplay(entry.entry_date)}</td>
-                    <td>{entry.entry_type.replace("_", " ")}</td>
-                    <td>{entry.entry_scope.replaceAll("_", " ")}</td>
-                    <td>{entry.owner_name ?? "Shared"}</td>
-                    <td>{entry.category_name ?? "Uncategorised"}</td>
-                    <td>
+                    <td data-label="Date">{formatDateDisplay(entry.entry_date)}</td>
+                    <td data-label="Type">{entry.entry_type.replace("_", " ")}</td>
+                    <td data-label="Scope">{entry.entry_scope.replaceAll("_", " ")}</td>
+                    <td data-label="Owner">{entry.owner_name ?? "Shared"}</td>
+                    <td data-label="Category">{entry.category_name ?? "Uncategorised"}</td>
+                    <td data-label="Description">
                       <strong>{entry.description}</strong>
                       {entry.notes ? <div className="muted">{entry.notes}</div> : null}
                     </td>
-                    <td>{formatCurrency(entry.amount)}</td>
-                    <td>{formatCurrency(entry.balance_effect)}</td>
-                    <td>{formatCurrency(entry.running_balance)}</td>
-                    <td>
+                    <td data-label="Amount">{formatCurrency(entry.amount)}</td>
+                    <td data-label="Balance effect">{formatCurrency(entry.balance_effect)}</td>
+                    <td data-label="Running balance">{formatCurrency(entry.running_balance)}</td>
+                    <td data-label="Visibility">
                       <span className={`pill ${entry.is_visible_to_stakeholders ? "" : "hidden"}`}>
                         {entry.is_visible_to_stakeholders ? "Visible" : "Owner only"}
                       </span>
                     </td>
                     {canEdit ? (
-                      <td>
+                      <td data-label="Action">
                         <div className="nav-links">
                           <a href={`/ledger?edit_id=${entry.id}`} className="nav-link ghost">Edit</a>
                           <form action={archiveLedgerEntryAction}>

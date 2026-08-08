@@ -45,10 +45,10 @@ export default async function ReportsPage() {
               <tbody>
                 {ownerSettlements.map((owner) => (
                   <tr key={owner.owner_id}>
-                    <td>{owner.owner_name}</td>
-                    <td>{formatCurrency(owner.gross_share)}</td>
-                    <td>{formatCurrency(owner.owner_draw_total)}</td>
-                    <td>{formatCurrency(owner.settlement_due)}</td>
+                    <td data-label="Owner">{owner.owner_name}</td>
+                    <td data-label="Gross share">{formatCurrency(owner.gross_share)}</td>
+                    <td data-label="Owner withdrawals">{formatCurrency(owner.owner_draw_total)}</td>
+                    <td data-label="Amount due">{formatCurrency(owner.settlement_due)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -89,10 +89,10 @@ export default async function ReportsPage() {
                 ) : (
                   monthly.map((row) => (
                     <tr key={row.month_key}>
-                      <td>{formatMonthLabel(row.month_key)}</td>
-                      <td>{formatCurrency(row.income_total)}</td>
-                      <td>{formatCurrency(row.expense_total)}</td>
-                      <td>{formatCurrency(row.net_total)}</td>
+                      <td data-label="Month">{formatMonthLabel(row.month_key)}</td>
+                      <td data-label="Income">{formatCurrency(row.income_total)}</td>
+                      <td data-label="Expenses">{formatCurrency(row.expense_total)}</td>
+                      <td data-label="Net movement">{formatCurrency(row.net_total)}</td>
                     </tr>
                   ))
                 )}
@@ -120,8 +120,8 @@ export default async function ReportsPage() {
                 ) : (
                   expenses.map((row) => (
                     <tr key={row.category_name}>
-                      <td>{row.category_name}</td>
-                      <td>{formatCurrency(row.total)}</td>
+                      <td data-label="Category">{row.category_name}</td>
+                      <td data-label="Total">{formatCurrency(row.total)}</td>
                     </tr>
                   ))
                 )}

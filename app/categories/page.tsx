@@ -119,7 +119,7 @@ export default async function CategoriesPage({
             <tbody>
               {categories.map((category) => (
                 <tr key={category.id}>
-                  <td>
+                  <td data-label="Name">
                     <form action={updateCategoryAction} className="inline-edit-form">
                       <input type="hidden" name="category_id" value={category.id} />
                       <input type="text" name="name" defaultValue={category.name} required />
@@ -133,16 +133,16 @@ export default async function CategoriesPage({
                       <button type="submit" className="ghost">Save</button>
                     </form>
                   </td>
-                  <td>{category.category_type.replace("_", " ")}</td>
-                  <td>{category.sort_order}</td>
-                  <td>{category.entry_count}</td>
-                  <td>{formatCurrency(category.total_amount)}</td>
-                  <td>
+                  <td data-label="Type">{category.category_type.replace("_", " ")}</td>
+                  <td data-label="Order">{category.sort_order}</td>
+                  <td data-label="Entries">{category.entry_count}</td>
+                  <td data-label="Total amount">{formatCurrency(category.total_amount)}</td>
+                  <td data-label="Status">
                     <span className={`pill ${category.is_active ? "" : "hidden"}`}>
                       {category.is_active ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Actions">
                     <form action={toggleCategoryStatusAction}>
                       <input type="hidden" name="category_id" value={category.id} />
                       <input type="hidden" name="next_active" value={category.is_active ? "false" : "true"} />
