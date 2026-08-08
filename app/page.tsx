@@ -45,9 +45,9 @@ export default async function DashboardPage() {
 
             <div className="stat-strip">
               <div className="metric metric-featured">
-                <span className="metric-label">Current running balance</span>
+                <span className="metric-label">Expected bank balance</span>
                 <strong>{formatCurrency(summary.current_balance)}</strong>
-                <span className="metric-detail">Updated from every visible ledger movement</span>
+                <span className="metric-detail">What the bank account should show after all recorded activity</span>
               </div>
               <div className="metric">
                 <span className="metric-label">Shared income</span>
@@ -130,8 +130,9 @@ export default async function DashboardPage() {
           <p className="eyebrow">Reading guide</p>
           <h2 className="section-title">How to interpret the numbers</h2>
           <ul className="notes-list muted">
-            <li>The running balance is the total of all visible ledger movements.</li>
+            <li>The expected bank balance is the total of all recorded cash movements in and out of the account.</li>
             <li>Income raises the balance. Expenses reduce it.</li>
+            <li>Tenant deposits remain part of the bank balance, but they are excluded from owner income.</li>
             <li>Owner-only hidden entries are excluded for stakeholder viewers.</li>
             <li>The full ledger shows each underlying line item in date order.</li>
           </ul>
