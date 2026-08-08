@@ -640,12 +640,28 @@ code {
     grid-template-columns: 1fr;
   }
 
+  .grid.cards,
+  .form-grid,
+  .stat-strip.compact {
+    grid-template-columns: 1fr;
+  }
+
   .stat-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sidebar {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1100px) {
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar > * {
+    width: 100%;
   }
 }
 
@@ -690,14 +706,6 @@ code {
 
   .inline-edit-form {
     grid-template-columns: 1fr;
-  }
-
-  .topbar {
-    align-items: flex-start;
-  }
-
-  .topbar > * {
-    width: 100%;
   }
 
   .nav-links {
