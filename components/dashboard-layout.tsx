@@ -62,7 +62,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(148,163,184,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(113,113,122,0.12),transparent_22%),linear-gradient(180deg,#09090b_0%,#111827_45%,#09090b_100%)]" />
 
       <div className="mx-auto flex min-h-screen w-full max-w-7xl gap-0 px-0 lg:px-6">
-        <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r border-white/10 bg-zinc-950/85 px-5 py-6 backdrop-blur lg:block">
+        <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-r border-white/10 bg-zinc-950/85 px-5 py-6 backdrop-blur xl:block">
           <SidebarContent currentPath={pathname} navItems={navItems} user={user} />
         </aside>
 
@@ -72,7 +72,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
               <button
                 type="button"
                 onClick={() => setMobileOpen(true)}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-100 transition hover:border-white/20 hover:bg-white/10 lg:hidden"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-100 transition hover:border-white/20 hover:bg-white/10 xl:hidden"
                 aria-label="Open navigation"
               >
                 <Menu className="h-5 w-5" />
@@ -115,7 +115,7 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
       </div>
 
       {mobileOpen ? (
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <button
             type="button"
             aria-label="Close navigation overlay"
