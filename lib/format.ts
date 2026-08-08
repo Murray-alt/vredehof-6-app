@@ -8,6 +8,18 @@ export function formatCurrency(value: number | string): string {
   }).format(Number.isFinite(numeric) ? numeric : 0);
 }
 
+export function formatDateDisplay(value: Date | string | null | undefined): string {
+  if (!value) {
+    return "None";
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10);
+  }
+
+  return value;
+}
+
 export function formatMonthLabel(monthKey: string): string {
   const [year, month] = monthKey.split("-").map(Number);
 

@@ -1,5 +1,5 @@
 import { requireOwner } from "@/lib/auth";
-import { formatCurrency, formatMonthLabel } from "@/lib/format";
+import { formatCurrency, formatDateDisplay, formatMonthLabel } from "@/lib/format";
 import { getImportedEntries, getProperty, getSourceSummary } from "@/lib/queries";
 
 export default async function ImportsPage({
@@ -52,7 +52,7 @@ export default async function ImportsPage({
               <span>Imported amount total</span>
             </div>
             <div className="metric">
-              <strong>{importedSummary?.latest_entry_date ?? "None"}</strong>
+              <strong>{formatDateDisplay(importedSummary?.latest_entry_date)}</strong>
               <span>Latest imported date</span>
             </div>
           </div>

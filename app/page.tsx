@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
-import { formatCurrency, formatMonthLabel } from "@/lib/format";
+import { formatCurrency, formatDateDisplay, formatMonthLabel } from "@/lib/format";
 import { getDashboardSummary, getExpenseBreakdown, getMonthlySummaries, getOwnerSettlements, getProperty, getSourceSummary } from "@/lib/queries";
 
 export default async function DashboardPage() {
@@ -184,7 +184,7 @@ export default async function DashboardPage() {
               </div>
               <div className="metric">
                 <span className="metric-label">Latest imported date</span>
-                <strong>{importedSummary?.latest_entry_date ?? "None"}</strong>
+                <strong>{formatDateDisplay(importedSummary?.latest_entry_date)}</strong>
                 <span className="metric-detail">Most recent date among imported entries</span>
               </div>
             </div>
@@ -206,7 +206,7 @@ export default async function DashboardPage() {
               </div>
               <div className="metric">
                 <span className="metric-label">Latest manual date</span>
-                <strong>{manualSummary?.latest_entry_date ?? "None"}</strong>
+                <strong>{formatDateDisplay(manualSummary?.latest_entry_date)}</strong>
                 <span className="metric-detail">Most recent date captured manually</span>
               </div>
             </div>
