@@ -31,7 +31,8 @@ export default async function ImportsPage({
   return (
     <main className="grid" style={{ marginTop: 18 }}>
       <section className="hero">
-        <h1 style={{ margin: "0 0 8px" }}>Import review</h1>
+        <p className="eyebrow">Import audit</p>
+        <h2 className="section-title">Import review</h2>
         <p className="muted" style={{ margin: 0 }}>
           Review everything loaded from the workbook, including its source reference, category, visibility, and running balance effect.
         </p>
@@ -39,7 +40,8 @@ export default async function ImportsPage({
 
       <section className="grid cards">
         <article className="panel">
-          <h2 style={{ marginTop: 0 }}>Imported overview</h2>
+          <p className="eyebrow">Overview</p>
+          <h2 className="section-title">Imported overview</h2>
           <div className="grid cards">
             <div className="metric">
               <strong>{importedSummary?.entry_count ?? 0}</strong>
@@ -57,7 +59,8 @@ export default async function ImportsPage({
         </article>
 
         <article className="panel">
-          <h2 style={{ marginTop: 0 }}>Filter imported rows</h2>
+          <p className="eyebrow">Review tools</p>
+          <h2 className="section-title">Filter imported rows</h2>
           <form method="get" className="form-grid">
             <label>
               Month
@@ -87,7 +90,8 @@ export default async function ImportsPage({
       <section className="panel">
         <div className="topbar">
           <div>
-            <h2 style={{ margin: "0 0 8px" }}>Imported ledger rows</h2>
+            <p className="eyebrow">Traceability</p>
+            <h2 className="section-title">Imported ledger rows</h2>
             <p className="muted" style={{ margin: 0 }}>
               Use the source reference to trace an entry back to the original workbook cell or row.
             </p>
@@ -95,7 +99,7 @@ export default async function ImportsPage({
           {filters.month ? <span className="pill">{formatMonthLabel(filters.month)}</span> : null}
         </div>
 
-        <div className="table-wrap">
+        <div className="table-wrap table-glow">
           <table>
             <thead>
               <tr>

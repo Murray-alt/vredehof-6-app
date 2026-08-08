@@ -77,7 +77,8 @@ export default async function LedgerPage({
       <section className="hero">
         <div className="topbar">
           <div>
-            <h1 style={{ margin: "0 0 8px" }}>Full ledger</h1>
+            <p className="eyebrow">Ledger</p>
+            <h2 className="section-title">Full ledger</h2>
             <p className="muted" style={{ margin: 0 }}>
               Every income, expense, adjustment, and opening balance entry in one timeline.
             </p>
@@ -219,14 +220,15 @@ export default async function LedgerPage({
       <section className="panel">
         <div className="topbar">
           <div>
-            <h2 style={{ margin: "0 0 8px" }}>Ledger entries</h2>
+            <p className="eyebrow">Timeline</p>
+            <h2 className="section-title">Ledger entries</h2>
             <p className="muted" style={{ margin: 0 }}>
               Running balance is the sum of balance effects over time. Expenses are negative movements.
             </p>
           </div>
         </div>
 
-        <div className="table-wrap">
+        <div className="table-wrap table-glow">
           <table>
             <thead>
               <tr>

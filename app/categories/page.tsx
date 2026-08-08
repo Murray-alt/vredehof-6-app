@@ -53,7 +53,8 @@ export default async function CategoriesPage({
   return (
     <main className="grid" style={{ marginTop: 18 }}>
       <section className="hero">
-        <h1 style={{ margin: "0 0 8px" }}>Manage categories</h1>
+        <p className="eyebrow">Owner controls</p>
+        <h2 className="section-title">Manage categories</h2>
         <p className="muted" style={{ margin: 0 }}>
           Keep the reporting clean by maintaining category names, order, and availability in one place.
         </p>
@@ -63,7 +64,8 @@ export default async function CategoriesPage({
 
       <section className="grid cards">
         <article className="panel">
-          <h2 style={{ marginTop: 0 }}>Create category</h2>
+          <p className="eyebrow">Create</p>
+          <h2 className="section-title">Create category</h2>
           <form action={createCategoryAction} className="grid">
             <div className="form-grid">
               <label>
@@ -88,7 +90,8 @@ export default async function CategoriesPage({
         </article>
 
         <article className="panel">
-          <h2 style={{ marginTop: 0 }}>Category notes</h2>
+          <p className="eyebrow">Guidance</p>
+          <h2 className="section-title">Category notes</h2>
           <ul className="muted" style={{ margin: 0, paddingLeft: 20 }}>
             <li>Inactive categories no longer appear in the new-entry dropdown.</li>
             <li>Existing ledger rows keep their original category when a category is disabled.</li>
@@ -98,8 +101,9 @@ export default async function CategoriesPage({
       </section>
 
       <section className="panel">
-        <h2 style={{ marginTop: 0 }}>Existing categories</h2>
-        <div className="table-wrap">
+        <p className="eyebrow">Current setup</p>
+        <h2 className="section-title">Existing categories</h2>
+        <div className="table-wrap table-glow">
           <table>
             <thead>
               <tr>

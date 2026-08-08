@@ -19,7 +19,8 @@ export default async function ReportsPage() {
   return (
     <main className="grid" style={{ marginTop: 18 }}>
       <section className="hero">
-        <h1 style={{ margin: "0 0 8px" }}>Monthly and yearly reports</h1>
+        <p className="eyebrow">Reporting</p>
+        <h2 className="section-title">Monthly and yearly reports</h2>
         <p className="muted" style={{ margin: 0 }}>
           These summaries sit on top of the same ledger, so stakeholders can trace totals back to underlying entries.
         </p>
@@ -27,8 +28,9 @@ export default async function ReportsPage() {
 
       <section className="grid cards">
         <article className="panel">
-          <h2 style={{ marginTop: 0 }}>Monthly summary</h2>
-          <div className="table-wrap">
+          <p className="eyebrow">Trend view</p>
+          <h2 className="section-title">Monthly summary</h2>
+          <div className="table-wrap table-glow">
             <table>
               <thead>
                 <tr>
@@ -59,8 +61,9 @@ export default async function ReportsPage() {
         </article>
 
         <article className="panel">
-          <h2 style={{ marginTop: 0 }}>Expense categories</h2>
-          <div className="table-wrap">
+          <p className="eyebrow">Breakdown</p>
+          <h2 className="section-title">Expense categories</h2>
+          <div className="table-wrap table-glow">
             <table>
               <thead>
                 <tr>
