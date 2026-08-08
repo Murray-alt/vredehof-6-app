@@ -18,6 +18,11 @@ function deriveBalanceEffect(entryType: string, amount: number): number {
   return Math.abs(amount);
 }
 
+function ownerRequiredForScope(entryScope: string, ownerIdRaw: string): boolean {
+  const ownerRequiredScopes = new Set(["owner_withdrawal", "owner_expense", "owner_distribution"]);
+  return ownerRequiredScopes.has(entryScope) && !ownerIdRaw;
+}
+
 export async function loginAction(formData: FormData): Promise<void> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
@@ -141,7 +146,9 @@ export async function createLedgerEntryAction(formData: FormData): Promise<void>
 
   const entryDate = String(formData.get("entry_date") ?? "");
   const entryType = String(formData.get("entry_type") ?? "expense");
+  const entryScope = String(formData.get("entry_scope") ?? "shared_property");
   const categoryIdRaw = String(formData.get("category_id") ?? "");
+  const ownerIdRaw = String(formData.get("owner_id") ?? "");
   const description = String(formData.get("description") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
   const amount = parseAmount(formData.get("amount"));
@@ -151,12 +158,18 @@ export async function createLedgerEntryAction(formData: FormData): Promise<void>
     redirect("/ledger?error=entry-invalid");
   }
 
+  if (ownerRequiredForScope(entryScope, ownerIdRaw)) {
+    redirect("/ledger?error=owner-required");
+  }
+
   await sql(
     `INSERT INTO ledger_entries (
         property_id,
         category_id,
+        owner_id,
         entry_date,
         entry_type,
+        entry_scope,
         description,
         notes,
         amount,
@@ -165,12 +178,14 @@ export async function createLedgerEntryAction(formData: FormData): Promise<void>
         is_visible_to_stakeholders,
         created_by_user_id,
         updated_by_user_id
-     ) VALUES ($1, NULLIF($2, '')::bigint, $3, $4, $5, NULLIF($6, ''), $7, $8, 'manual', $9, $10, $10)`,
+     ) VALUES ($1, NULLIF($2, '')::bigint, NULLIF($3, '')::bigint, $4, $5, $6, $7, NULLIF($8, ''), $9, $10, 'manual', $11, $12, $12)`,
     [
       property.id,
       categoryIdRaw,
+      ownerIdRaw,
       entryDate,
       entryType,
+      entryScope,
       description,
       notes,
       amount.toFixed(2),
@@ -198,7 +213,9 @@ export async function updateLedgerEntryAction(formData: FormData): Promise<void>
   const entryId = Number(formData.get("entry_id"));
   const entryDate = String(formData.get("entry_date") ?? "");
   const entryType = String(formData.get("entry_type") ?? "expense");
+  const entryScope = String(formData.get("entry_scope") ?? "shared_property");
   const categoryIdRaw = String(formData.get("category_id") ?? "");
+  const ownerIdRaw = String(formData.get("owner_id") ?? "");
   const description = String(formData.get("description") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
   const amount = parseAmount(formData.get("amount"));
@@ -212,17 +229,23 @@ export async function updateLedgerEntryAction(formData: FormData): Promise<void>
     redirect(`/ledger?edit_id=${entryId}&error=entry-invalid`);
   }
 
+  if (ownerRequiredForScope(entryScope, ownerIdRaw)) {
+    redirect(`/ledger?edit_id=${entryId}&error=owner-required`);
+  }
+
   await sql(
     `UPDATE ledger_entries
      SET category_id = NULLIF($3, '')::bigint,
-         entry_date = $4,
-         entry_type = $5,
-         description = $6,
-         notes = NULLIF($7, ''),
-         amount = $8,
-         balance_effect = $9,
-         is_visible_to_stakeholders = $10,
-         updated_by_user_id = $11,
+         owner_id = NULLIF($4, '')::bigint,
+         entry_date = $5,
+         entry_type = $6,
+         entry_scope = $7,
+         description = $8,
+         notes = NULLIF($9, ''),
+         amount = $10,
+         balance_effect = $11,
+         is_visible_to_stakeholders = $12,
+         updated_by_user_id = $13,
          updated_at = NOW()
      WHERE id = $1
        AND property_id = $2
@@ -231,8 +254,10 @@ export async function updateLedgerEntryAction(formData: FormData): Promise<void>
       entryId,
       property.id,
       categoryIdRaw,
+      ownerIdRaw,
       entryDate,
       entryType,
+      entryScope,
       description,
       notes,
       amount.toFixed(2),

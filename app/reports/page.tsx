@@ -1,6 +1,6 @@
 import { requireUser } from "@/lib/auth";
 import { formatCurrency, formatMonthLabel } from "@/lib/format";
-import { getExpenseBreakdown, getMonthlySummaries, getProperty } from "@/lib/queries";
+import { getDashboardSummary, getExpenseBreakdown, getMonthlySummaries, getOwnerSettlements, getProperty } from "@/lib/queries";
 
 export default async function ReportsPage() {
   const user = await requireUser();
@@ -11,9 +11,11 @@ export default async function ReportsPage() {
   }
 
   const stakeholdersOnly = user.role_code === "stakeholder_viewer";
-  const [monthly, expenses] = await Promise.all([
+  const [monthly, expenses, summary, ownerSettlements] = await Promise.all([
     getMonthlySummaries(property.id, stakeholdersOnly),
-    getExpenseBreakdown(property.id, stakeholdersOnly)
+    getExpenseBreakdown(property.id, stakeholdersOnly),
+    getDashboardSummary(property.id, stakeholdersOnly),
+    getOwnerSettlements(property.id)
   ]);
 
   return (
@@ -24,6 +26,45 @@ export default async function ReportsPage() {
         <p className="muted" style={{ margin: 0 }}>
           These summaries sit on top of the same ledger, so stakeholders can trace totals back to underlying entries.
         </p>
+      </section>
+
+      <section className="grid cards">
+        <article className="panel">
+          <p className="eyebrow">Settlement</p>
+          <h2 className="section-title">Owner split summary</h2>
+          <div className="table-wrap table-glow">
+            <table>
+              <thead>
+                <tr>
+                  <th>Owner</th>
+                  <th>Gross share</th>
+                  <th>Owner withdrawals</th>
+                  <th>Amount due</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ownerSettlements.map((owner) => (
+                  <tr key={owner.owner_id}>
+                    <td>{owner.owner_name}</td>
+                    <td>{formatCurrency(owner.gross_share)}</td>
+                    <td>{formatCurrency(owner.owner_draw_total)}</td>
+                    <td>{formatCurrency(owner.settlement_due)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article className="panel">
+          <p className="eyebrow">Protected funds</p>
+          <h2 className="section-title">Tenant deposit balance</h2>
+          <div className="metric metric-featured">
+            <span className="metric-label">Excluded from owner income</span>
+            <strong>{formatCurrency(summary.tenant_funds_balance)}</strong>
+            <span className="metric-detail">Deposits stay in the account balance, but never count toward Astrid and Kiki&apos;s shared income.</span>
+          </div>
+        </article>
       </section>
 
       <section className="grid cards">

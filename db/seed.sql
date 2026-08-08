@@ -24,11 +24,15 @@ FROM property_row
 JOIN (
     VALUES
         ('Rent', 'income', 10),
+        ('Tenant Deposit', 'income', 15),
         ('Levy', 'expense', 20),
         ('Maintenance', 'expense', 30),
         ('Utilities', 'expense', 40),
         ('Holiday/Shared', 'expense', 50),
         ('Other', 'expense', 60),
+        ('Owner Withdrawal', 'expense', 65),
+        ('Owner Expense', 'expense', 68),
+        ('Distribution', 'expense', 69),
         ('Opening Balance', 'opening_balance', 70),
         ('Adjustment', 'adjustment', 80)
 ) AS seed(name, category_type, sort_order) ON TRUE
@@ -36,6 +40,25 @@ ON CONFLICT (property_id, name) DO UPDATE
 SET
     category_type = EXCLUDED.category_type,
     sort_order = EXCLUDED.sort_order,
+    updated_at = NOW();
+
+WITH property_row AS (
+    SELECT id
+    FROM properties
+    WHERE slug = 'vredehof-6'
+)
+INSERT INTO owners (property_id, display_name, ownership_share)
+SELECT property_row.id, seed.display_name, seed.ownership_share
+FROM property_row
+JOIN (
+    VALUES
+        ('Astrid', 0.5000::numeric),
+        ('Kiki', 0.5000::numeric)
+) AS seed(display_name, ownership_share) ON TRUE
+ON CONFLICT (property_id, display_name) DO UPDATE
+SET
+    ownership_share = EXCLUDED.ownership_share,
+    is_active = TRUE,
     updated_at = NOW();
 
 INSERT INTO users (email, password_hash, display_name, role_code)

@@ -32,12 +32,25 @@ CREATE TABLE IF NOT EXISTS categories (
     UNIQUE (property_id, name)
 );
 
+CREATE TABLE IF NOT EXISTS owners (
+    id BIGSERIAL PRIMARY KEY,
+    property_id BIGINT NOT NULL REFERENCES properties (id) ON DELETE CASCADE,
+    display_name TEXT NOT NULL,
+    ownership_share NUMERIC(6, 4) NOT NULL DEFAULT 0.5000,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (property_id, display_name)
+);
+
 CREATE TABLE IF NOT EXISTS ledger_entries (
     id BIGSERIAL PRIMARY KEY,
     property_id BIGINT NOT NULL REFERENCES properties (id) ON DELETE CASCADE,
     category_id BIGINT REFERENCES categories (id) ON DELETE SET NULL,
+    owner_id BIGINT REFERENCES owners (id) ON DELETE SET NULL,
     entry_date DATE NOT NULL,
     entry_type TEXT NOT NULL CHECK (entry_type IN ('income', 'expense', 'adjustment', 'opening_balance')),
+    entry_scope TEXT NOT NULL DEFAULT 'shared_property',
     description TEXT NOT NULL,
     notes TEXT,
     amount NUMERIC(12, 2) NOT NULL CHECK (amount >= 0),
@@ -58,9 +71,21 @@ CREATE INDEX IF NOT EXISTS idx_ledger_entries_property_date
 CREATE INDEX IF NOT EXISTS idx_ledger_entries_visibility
     ON ledger_entries (property_id, is_visible_to_stakeholders, is_archived);
 
+CREATE INDEX IF NOT EXISTS idx_ledger_entries_owner_scope
+    ON ledger_entries (property_id, owner_id, entry_scope, entry_date DESC);
+
 CREATE INDEX IF NOT EXISTS idx_categories_property_sort
     ON categories (property_id, sort_order ASC, name ASC);
+
+CREATE INDEX IF NOT EXISTS idx_owners_property_name
+    ON owners (property_id, display_name ASC);
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_ledger_entries_imported_source_reference
     ON ledger_entries (property_id, source, source_reference)
     WHERE source = 'imported' AND source_reference IS NOT NULL;
+
+ALTER TABLE ledger_entries
+    ADD COLUMN IF NOT EXISTS owner_id BIGINT REFERENCES owners (id) ON DELETE SET NULL;
+
+ALTER TABLE ledger_entries
+    ADD COLUMN IF NOT EXISTS entry_scope TEXT NOT NULL DEFAULT 'shared_property';

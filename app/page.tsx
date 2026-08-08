@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { formatCurrency, formatMonthLabel } from "@/lib/format";
-import { getDashboardSummary, getExpenseBreakdown, getMonthlySummaries, getProperty, getSourceSummary } from "@/lib/queries";
+import { getDashboardSummary, getExpenseBreakdown, getMonthlySummaries, getOwnerSettlements, getProperty, getSourceSummary } from "@/lib/queries";
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -19,10 +19,13 @@ export default async function DashboardPage() {
   }
 
   const stakeholdersOnly = user.role_code === "stakeholder_viewer";
-  const summary = await getDashboardSummary(property.id, stakeholdersOnly);
-  const monthly = await getMonthlySummaries(property.id, stakeholdersOnly);
-  const expenseBreakdown = await getExpenseBreakdown(property.id, stakeholdersOnly);
-  const sourceSummary = stakeholdersOnly ? [] : await getSourceSummary(property.id);
+  const [summary, monthly, expenseBreakdown, sourceSummary, ownerSettlements] = await Promise.all([
+    getDashboardSummary(property.id, stakeholdersOnly),
+    getMonthlySummaries(property.id, stakeholdersOnly),
+    getExpenseBreakdown(property.id, stakeholdersOnly),
+    stakeholdersOnly ? Promise.resolve([]) : getSourceSummary(property.id),
+    getOwnerSettlements(property.id)
+  ]);
   const latestMonth = monthly[0];
   const importedSummary = sourceSummary.find((row) => row.source === "imported");
   const manualSummary = sourceSummary.find((row) => row.source === "manual");
@@ -47,19 +50,19 @@ export default async function DashboardPage() {
                 <span className="metric-detail">Updated from every visible ledger movement</span>
               </div>
               <div className="metric">
-                <span className="metric-label">Year-to-date income</span>
+                <span className="metric-label">Shared income</span>
                 <strong>{formatCurrency(summary.year_income_total)}</strong>
-                <span className="metric-detail">Rent and other inflows captured this year</span>
+                <span className="metric-detail">Income available for owner sharing, excluding tenant deposits</span>
               </div>
               <div className="metric">
-                <span className="metric-label">Year-to-date expenses</span>
+                <span className="metric-label">Shared expenses</span>
                 <strong>{formatCurrency(summary.year_expense_total)}</strong>
                 <span className="metric-detail">Levies, repairs, utilities, and shared costs</span>
               </div>
               <div className="metric">
-                <span className="metric-label">Net movement</span>
+                <span className="metric-label">Distributable profit</span>
                 <strong>{formatCurrency(summary.year_net_total)}</strong>
-                <span className="metric-detail">The direction of the year so far</span>
+                <span className="metric-detail">The year-to-date pool that is split 50/50 between Astrid and Kiki</span>
               </div>
             </div>
           </div>
@@ -78,12 +81,12 @@ export default async function DashboardPage() {
 
             <div className="mini-grid">
               <div>
-                <span className="muted">Visible entries</span>
-                <strong className="mini-metric">{summary.visible_entry_count}</strong>
+                <span className="muted">Tenant funds held</span>
+                <strong className="mini-metric">{formatCurrency(summary.tenant_funds_balance)}</strong>
               </div>
               <div>
-                <span className="muted">Latest activity</span>
-                <strong className="mini-metric">{summary.latest_entry_date ?? "No data yet"}</strong>
+                <span className="muted">Owner withdrawals this year</span>
+                <strong className="mini-metric">{formatCurrency(summary.owner_draw_total)}</strong>
               </div>
             </div>
           </aside>
@@ -137,6 +140,33 @@ export default async function DashboardPage() {
 
       {user.role_code === "owner_admin" ? (
         <section className="grid cards">
+          <article className="panel">
+            <p className="eyebrow">Year-end split</p>
+            <h2 className="section-title">Astrid and Kiki settlement</h2>
+            <div className="table-wrap table-glow">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Owner</th>
+                    <th>Gross 50% share</th>
+                    <th>Personal withdrawals/expenses</th>
+                    <th>Settlement due</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ownerSettlements.map((owner) => (
+                    <tr key={owner.owner_id}>
+                      <td>{owner.owner_name}</td>
+                      <td>{formatCurrency(owner.gross_share)}</td>
+                      <td>{formatCurrency(owner.owner_draw_total)}</td>
+                      <td>{formatCurrency(owner.settlement_due)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </article>
+
           <article className="panel">
             <p className="eyebrow">Data source</p>
             <h2 className="section-title">Imported history</h2>

@@ -1,7 +1,7 @@
 import { archiveLedgerEntryAction, createCategoryAction, createLedgerEntryAction, updateLedgerEntryAction } from "@/app/actions";
 import { requireUser } from "@/lib/auth";
 import { formatCurrency } from "@/lib/format";
-import { getCategories, getLedgerEntries, getLedgerEntryById, getProperty } from "@/lib/queries";
+import { getCategories, getLedgerEntries, getLedgerEntryById, getOwners, getProperty } from "@/lib/queries";
 
 function bannerFromSearch(search: Record<string, string | string[] | undefined>): { kind: "error" | "success"; message: string } | null {
   if (search.error) {
@@ -10,7 +10,8 @@ function bannerFromSearch(search: Record<string, string | string[] | undefined>)
       invalid: "The submitted values were not valid.",
       "entry-invalid": "Please provide a valid date, description, and amount.",
       "entry-missing": "The selected entry could not be found.",
-      "category-name-required": "Category name is required."
+      "category-name-required": "Category name is required.",
+      "owner-required": "Please choose the owner for a personal withdrawal, owner expense, or distribution."
     };
 
     return {
@@ -54,13 +55,16 @@ export default async function LedgerPage({
     year: typeof search.year === "string" ? search.year : undefined,
     month: typeof search.month === "string" ? search.month : undefined,
     entryType: typeof search.entry_type === "string" ? search.entry_type : undefined,
+    entryScope: typeof search.entry_scope === "string" ? search.entry_scope : undefined,
+    ownerId: typeof search.owner_id === "string" ? search.owner_id : undefined,
     search: typeof search.search === "string" ? search.search : undefined,
     stakeholdersOnly: user.role_code === "stakeholder_viewer"
   };
   const editId = typeof search.edit_id === "string" ? Number(search.edit_id) : 0;
 
-  const [categories, entries, editingEntry] = await Promise.all([
+  const [categories, owners, entries, editingEntry] = await Promise.all([
     getCategories(property.id),
+    getOwners(property.id),
     getLedgerEntries(property.id, filters),
     editId > 0 ? getLedgerEntryById(property.id, editId) : Promise.resolve(null)
   ]);
@@ -108,6 +112,28 @@ export default async function LedgerPage({
             </select>
           </label>
           <label>
+            Scope
+            <select name="entry_scope" defaultValue={filters.entryScope ?? ""}>
+              <option value="">All scopes</option>
+              <option value="shared_property">Shared property</option>
+              <option value="owner_withdrawal">Owner withdrawal</option>
+              <option value="owner_expense">Owner expense</option>
+              <option value="owner_distribution">Owner distribution</option>
+              <option value="tenant_deposit">Tenant deposit</option>
+            </select>
+          </label>
+          <label>
+            Owner
+            <select name="owner_id" defaultValue={filters.ownerId ?? ""}>
+              <option value="">All owners</option>
+              {owners.map((owner) => (
+                <option key={owner.id} value={owner.id}>
+                  {owner.display_name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
             Search
             <input type="search" name="search" defaultValue={filters.search ?? ""} placeholder="Description or notes" />
           </label>
@@ -138,12 +164,33 @@ export default async function LedgerPage({
                   </select>
                 </label>
                 <label>
+                  Scope
+                  <select name="entry_scope" defaultValue={editingEntry?.entry_scope ?? "shared_property"}>
+                    <option value="shared_property">Shared property</option>
+                    <option value="owner_withdrawal">Owner withdrawal</option>
+                    <option value="owner_expense">Owner expense</option>
+                    <option value="owner_distribution">Owner distribution</option>
+                    <option value="tenant_deposit">Tenant deposit</option>
+                  </select>
+                </label>
+                <label>
                   Category
                   <select name="category_id" defaultValue={editingEntry?.category_id ? String(editingEntry.category_id) : ""}>
                     <option value="">Uncategorised</option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Owner
+                  <select name="owner_id" defaultValue={editingEntry?.owner_id ? String(editingEntry.owner_id) : ""}>
+                    <option value="">No owner linked</option>
+                    {owners.map((owner) => (
+                      <option key={owner.id} value={owner.id}>
+                        {owner.display_name}
                       </option>
                     ))}
                   </select>
@@ -234,6 +281,8 @@ export default async function LedgerPage({
               <tr>
                 <th>Date</th>
                 <th>Type</th>
+                <th>Scope</th>
+                <th>Owner</th>
                 <th>Category</th>
                 <th>Description</th>
                 <th>Amount</th>
@@ -246,13 +295,15 @@ export default async function LedgerPage({
             <tbody>
               {entries.length === 0 ? (
                 <tr>
-                  <td colSpan={canEdit ? 9 : 8}>No entries match the current filters.</td>
+                  <td colSpan={canEdit ? 11 : 10}>No entries match the current filters.</td>
                 </tr>
               ) : (
                 entries.map((entry) => (
                   <tr key={entry.id}>
                     <td>{entry.entry_date}</td>
                     <td>{entry.entry_type.replace("_", " ")}</td>
+                    <td>{entry.entry_scope.replaceAll("_", " ")}</td>
+                    <td>{entry.owner_name ?? "Shared"}</td>
                     <td>{entry.category_name ?? "Uncategorised"}</td>
                     <td>
                       <strong>{entry.description}</strong>
