@@ -1,6 +1,6 @@
 import { archiveLedgerEntryAction, createCategoryAction, createLedgerEntryAction, updateLedgerEntryAction } from "@/app/actions";
 import { requireUser } from "@/lib/auth";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDateDisplay } from "@/lib/format";
 import { getCategories, getLedgerEntries, getLedgerEntryById, getOwners, getProperty } from "@/lib/queries";
 
 function bannerFromSearch(search: Record<string, string | string[] | undefined>): { kind: "error" | "success"; message: string } | null {
@@ -152,7 +152,12 @@ export default async function LedgerPage({
               <div className="form-grid">
                 <label>
                   Date
-                  <input type="date" name="entry_date" required defaultValue={editingEntry?.entry_date ?? ""} />
+                  <input
+                    type="date"
+                    name="entry_date"
+                    required
+                    defaultValue={editingEntry ? formatDateDisplay(editingEntry.entry_date) : ""}
+                  />
                 </label>
                 <label>
                   Entry type
@@ -300,7 +305,7 @@ export default async function LedgerPage({
               ) : (
                 entries.map((entry) => (
                   <tr key={entry.id}>
-                    <td>{entry.entry_date}</td>
+                    <td>{formatDateDisplay(entry.entry_date)}</td>
                     <td>{entry.entry_type.replace("_", " ")}</td>
                     <td>{entry.entry_scope.replaceAll("_", " ")}</td>
                     <td>{entry.owner_name ?? "Shared"}</td>

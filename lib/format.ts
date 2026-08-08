@@ -20,7 +20,14 @@ export function formatDateDisplay(value: Date | string | null | undefined): stri
   return value;
 }
 
-export function formatMonthLabel(monthKey: string): string {
+export function formatMonthLabel(monthKey: Date | string): string {
+  if (monthKey instanceof Date) {
+    return new Intl.DateTimeFormat("en-ZA", {
+      month: "long",
+      year: "numeric"
+    }).format(monthKey);
+  }
+
   const [year, month] = monthKey.split("-").map(Number);
 
   if (!year || !month) {

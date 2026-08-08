@@ -122,7 +122,7 @@ export default async function ImportsPage({
               ) : (
                 importedEntries.map((entry) => (
                   <tr key={entry.id}>
-                    <td>{entry.entry_date}</td>
+                    <td>{formatDateDisplay(entry.entry_date)}</td>
                     <td>{entry.entry_type.replace("_", " ")}</td>
                     <td>{entry.description}</td>
                     <td>{entry.category_name ?? "Uncategorised"}</td>
