@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --bg: #09111f;
   --bg-top: #0f1c33;
@@ -39,6 +41,19 @@ body {
     radial-gradient(circle at top left, rgba(86, 224, 194, 0.18), transparent 26%),
     radial-gradient(circle at top right, rgba(90, 124, 255, 0.16), transparent 24%),
     linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 38%, var(--bg-bottom) 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  min-width: 0;
 }
 
 a {
